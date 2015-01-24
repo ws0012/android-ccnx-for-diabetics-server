@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="org.pl.lecznica.Uzytkownik" table="l_uzytkownik">
+        <id name="id" type="long">
+          <column name="id"/>
+          <generator class="identity"/>
+        </id>
+        <property name="nazwa" type="string">
+          <column name = "nazwa"/>
+        </property>
+        
+        <joined-subclass  name="org.pl.lecznica.Pacjent" extends="org.pl.lecznica.Uzytkownik" table="l_pacjent">
+            <key>
+              <column name="id"/>
+            </key>
+            <property name="imie" type="string">
+              <column length="45" name = "imie"/>
+            </property>
+            <property name="nazwisko" type="string">
+              <column length="45" name = "nazwisko"/>
+            </property>
+            <property name="pesel" type="string">
+              <column length="45" name = "pesel"/>
+            </property>
+            <list name="wyniki" cascade="save-update" table="l_wynik">
+                <key>
+                    <column name="id_pacjent"/>
+                </key>
+                <list-index column="idx"/>
+                    <one-to-many class="org.pl.lecznica.Wynik" />
+            </list>
+        </joined-subclass>
+        <joined-subclass  name="org.pl.lecznica.Lekarz" extends="org.pl.lecznica.Uzytkownik" table="l_lekarz">
+            <key>
+              <column name="id"/>
+            </key>
+            <list name="pacjenci" cascade="save-update" table="l_pacjent">
+                <key>
+                    <column name="id_lekarz" />
+                </key>
+                <list-index column="idx"/>
+                <one-to-many class="org.pl.lecznica.Pacjent"/>
+
+            </list>            
+                                    
+        </joined-subclass>       
+    </class>
+    <class name="org.pl.lecznica.Wynik" table="l_wynik">
+        <id name="id" type="long">
+          <column name="id"/>
+          <generator class="identity"/>
+        </id>
+        <property name="cisnienie" type="string">
+          <column name = "cisnienie"/>
+        </property>
+        <property name="temperatura" type="string">
+          <column name = "temperatura"/>
+        </property>
+        <property name="poziomCukru" type="string">
+          <column name = "poziom_cukru"/>
+        </property>
+        <property name="dataBadania" type="date">
+          <column name = "data_badania"/>
+        </property> 
+    </class>         
+</hibernate-mapping>
